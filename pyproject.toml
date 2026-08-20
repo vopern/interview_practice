@@ -1,0 +1,21 @@
+[project]
+name = "interview-trainer"
+version = "0.1.0"
+description = "Streamlit interview-practice chatbot with an AI interviewer, voice input, and persistent feedback"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit>=1.41.0",
+    "claude-agent-sdk>=0.1.0",
+    "openai>=1.60.0",
+    "python-dotenv>=1.0.0",
+    "pandas>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

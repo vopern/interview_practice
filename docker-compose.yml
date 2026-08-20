@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    container_name: interview-trainer
+    restart: unless-stopped
+    # Run as the host user so files in ./data stay owned by you, not root.
+    # The image gives uid 1000 a passwd entry and /home/app, so HOME resolves.
+    user: "1000:1000"
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      # The same ./data the local `make run` uses, so both see one set of
+      # sessions and one data/context/ for the planner to read.
+      - ./data:/app/data
+      # Your Claude Code login. The Agent SDK ships the CLI in the image, but
+      # not the credentials — mounting your ~/.claude lets the container use
+      # your `claude login` instead of an ANTHROPIC_API_KEY. Read-write on
+      # purpose: the CLI refreshes the OAuth token in place, and a read-only
+      # mount would work until the token expires and then stop.
+      - ${CLAUDE_HOME:-${HOME}/.claude}:/home/app/.claude
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
